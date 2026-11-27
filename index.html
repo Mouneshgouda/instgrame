@@ -41,7 +41,7 @@
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-indigo-950 tracking-tight">Guru.Mounesh</h1>
                 <p class="text-xs sm:text-sm font-bold text-amber-700 mt-0.5">@guru.mounesh</p>
-                <p class="text-sm text-slate-600 mt-2">Resource links shared from recent videos.</p>
+                <p class="text-sm text-slate-600 mt-2">Resource links from recent videos — simple, fast, and easy to open.</p>
             </header>
 
             <!-- Loading State -->
@@ -112,82 +112,28 @@
 
             <!-- Admin Link Manager (Shown after login) -->
             <section id="adminDashboardCard" class="hidden space-y-5">
-                <div class="bg-indigo-950 text-white rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3">
+                <div class="bg-indigo-950 text-white rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <h2 class="text-base font-extrabold">Manage Resource Links</h2>
-                        <p class="text-xs text-indigo-200">@guru.mounesh</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="text-base font-extrabold">Manage Resource Links</h2>
+                            <span id="storageStatusBadge"
+                                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                                <span id="storageStatusDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                <span id="storageStatusText">Local Storage (This Browser)</span>
+                            </span>
+                        </div>
+                        <p class="text-xs text-indigo-200 mt-0.5">@guru.mounesh</p>
                     </div>
                     <button type="button" onclick="handleAdminLogout()"
                             class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition">
-                        Logout
+                        Sign Out
                     </button>
                 </div>
 
+                <!-- Status Banner for Admin Actions -->
+                <div id="adminFeedbackBanner" class="hidden rounded-xl px-4 py-2.5 text-xs font-semibold border"></div>
+
                 <!-- Add Link Form (Title + URL) -->
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
-                    <h3 class="text-sm font-extrabold text-indigo-950 mb-3.5">Add Resource Link</h3>
-                    <form id="addLinkForm" onsubmit="handleAddLink(event)" class="space-y-3.5">
-                        <div>
-                            <label for="linkTitleInput" class="block text-xs font-bold text-slate-700 mb-1">Title</label>
-                            <input type="text" id="linkTitleInput" required placeholder="Resource title"
-                                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label for="linkUrlInput" class="block text-xs font-bold text-slate-700 mb-1">URL</label>
-                            <input type="url" id="linkUrlInput" required placeholder="https://example.com"
-                                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500">
-                        </div>
-                        <button type="submit"
-                                class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-indigo-950 font-extrabold text-xs sm:text-sm transition">
-                            Add Link
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Existing Links with Remove Button -->
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
-                    <div class="flex items-center justify-between mb-3.5">
-                        <h3 class="text-sm font-extrabold text-indigo-950">Current Links</h3>
-                        <span id="adminLinksCount" class="text-xs font-semibold text-slate-500">0</span>
-                    </div>
-                    <div id="adminLinksList" class="space-y-2.5"></div>
-                </div>
-            </section>
-        </div>
-
-    </main>
-
-    <!-- Subtle Footer with Admin Button -->
-    <footer class="border-t border-slate-200/80 bg-white py-4 px-4 mt-auto">
-        <div class="max-w-2xl mx-auto flex items-center justify-between text-xs text-slate-400">
-            <span>© <span id="footerYear"></span> @guru.mounesh</span>
-            <button type="button" onclick="navigateTo('admin')"
-                    class="text-slate-400 hover:text-indigo-950 font-medium transition px-2 py-1 rounded-lg">
-                Admin
-            </button>
-        </div>
-    </footer>
-
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 w-full max-w-xs px-4 pointer-events-none"></div>
-
-    <!-- Application & Firestore Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // =========================================================================
-        // FIREBASE CONFIGURATION SETUP
-        // Replace `MANUAL_FIREBASE_CONFIG` below with your Firebase project config:
-        // Firebase Console -> Project Settings -> Your apps -> SDK setup and configuration.
-        // Also enable Anonymous Auth (or Custom Token) and create Firestore Database.
-        //
-        // SECURITY NOTE:
-        // Any code, config, or hash in client-side HTML/JS can be viewed in browser
-        // DevTools by visitors. For real production security, use Firebase
-        // Authentication (email/password) and lock down Firestore Security Rules.
-        // =========================================================================
         const MANUAL_FIREBASE_CONFIG = null;
         // Example:
         // const MANUAL_FIREBASE_CONFIG = {
@@ -200,6 +146,7 @@
         // };
 
         const appId = typeof __app_id !== 'undefined' && __app_id ? __app_id : 'guru-mounesh-links';
+        const LOCAL_STORAGE_KEY = 'guru_mounesh_resource_links_v1';
 
         let firebaseConfig = null;
         if (typeof __firebase_config !== 'undefined' && __firebase_config) {
@@ -212,20 +159,146 @@
             firebaseConfig = MANUAL_FIREBASE_CONFIG;
         }
 
-        // SHA-256 hex digests for admin credentials (kept as hashes rather than plain text).
-        // Compute any new hash in browser console with:
-        // crypto.subtle.digest('SHA-256', new TextEncoder().encode('value')).then(b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join(''))
-        const ADMIN_USER_SHA256 = 'c91c4e1c4a9f4b3e2f8b0c6a1d7e5f3a9b2c4d6e8f0a1b2c3d4e5f6a7b8c9d0e';
-        const ADMIN_PASS_SHA256 = '7f3e9a1c5b2d8e4f6a0c1b3d5e7f9a2c4b6d8e0f1a3c5b7d9e1f3a5c7b9d1e3f';
+        // Pure-JavaScript SHA-256 implementation (works reliably on GitHub Pages without Web Crypto requirements)
+        function sha256PureJs(asciiOrUtf8) {
+            function rightRotate(value, amount) {
+                return (value >>> amount) | (value << (32 - amount));
+            }
+
+            const utf8Bytes = new TextEncoder().encode(String(asciiOrUtf8));
+            const bitLength = utf8Bytes.length * 8;
+
+            const k = [
+                0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+                0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+                0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+                0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+                0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+                0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+            ];
+
+            let h0 = 0x6a09e667;
+            let h1 = 0xbb67ae85;
+            let h2 = 0x3c6ef372;
+            let h3 = 0xa54ff53a;
+            let h4 = 0x510e527f;
+            let h5 = 0x9b05688c;
+            let h6 = 0x1f83d9ab;
+            let h7 = 0x5be0cd19;
+
+            // Pre-processing: pad message to 512-bit (64-byte) blocks
+            const paddedLength = (((utf8Bytes.length + 8) >>> 6) + 1) * 64;
+            const padded = new Uint8Array(paddedLength);
+            padded.set(utf8Bytes);
+            padded[utf8Bytes.length] = 0x80;
+
+            const view = new DataView(padded.buffer);
+            const highBits = Math.floor(bitLength / 0x100000000);
+            const lowBits = bitLength >>> 0;
+            view.setUint32(paddedLength - 8, highBits, false);
+            view.setUint32(paddedLength - 4, lowBits, false);
+
+            const w = new Uint32Array(64);
+
+            for (let offset = 0; offset < paddedLength; offset += 64) {
+                for (let i = 0; i < 16; i++) {
+                    w[i] = view.getUint32(offset + i * 4, false);
+                }
+                for (let i = 16; i < 64; i++) {
+                    const s0 = rightRotate(w[i - 15], 7) ^ rightRotate(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+                    const s1 = rightRotate(w[i - 2], 17) ^ rightRotate(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+                    w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
+                }
+
+                let a = h0;
+                let b = h1;
+                let c = h2;
+                let d = h3;
+                let e = h4;
+                let f = h5;
+                let g = h6;
+                let h = h7;
+
+                for (let i = 0; i < 64; i++) {
+                    const S1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
+                    const ch = (e & f) ^ (~e & g);
+                    const temp1 = (h + S1 + ch + k[i] + w[i]) >>> 0;
+                    const S0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
+                    const maj = (a & b) ^ (a & c) ^ (b & c);
+                    const temp2 = (S0 + maj) >>> 0;
+
+                    h = g;
+                    g = f;
+                    f = e;
+                    e = (d + temp1) >>> 0;
+                    d = c;
+                    c = b;
+                    b = a;
+                    a = (temp1 + temp2) >>> 0;
+                }
+
+                h0 = (h0 + a) >>> 0;
+                h1 = (h1 + b) >>> 0;
+                h2 = (h2 + c) >>> 0;
+                h3 = (h3 + d) >>> 0;
+                h4 = (h4 + e) >>> 0;
+                h5 = (h5 + f) >>> 0;
+                h6 = (h6 + g) >>> 0;
+                h7 = (h7 + h) >>> 0;
+            }
+
+            return [h0, h1, h2, h3, h4, h5, h6, h7]
+                .map((val) => val.toString(16).padStart(8, '0'))
+                .join('');
+        }
 
         let db = null;
         let auth = null;
         let currentUser = null;
         let isAdminLoggedIn = false;
+        let isFirebaseSynced = false;
         let linksData = [];
+
+        function updateStorageBadge() {
+            const badgeText = document.getElementById('storageStatusText');
+            const badgeDot = document.getElementById('storageStatusDot');
+            const badgeEl = document.getElementById('storageStatusBadge');
+            if (!badgeText || !badgeDot || !badgeEl) return;
+
+            if (isFirebaseSynced && db) {
+                badgeText.textContent = 'Firebase Firestore Synced';
+                badgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-200 border border-emerald-400/40';
+            } else {
+                badgeText.textContent = 'Local Storage (This Browser)';
+                badgeDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-200 border border-amber-400/40';
+            }
+        }
+
+        function setAdminFeedback(message, type = 'success') {
+            const banner = document.getElementById('adminFeedbackBanner');
+            if (!banner) return;
+            if (!message) {
+                banner.classList.add('hidden');
+                banner.textContent = '';
+                return;
+            }
+            banner.textContent = message;
+            banner.classList.remove('hidden');
+            if (type === 'error') {
+                banner.className = 'rounded-xl px-4 py-2.5 text-xs font-semibold border bg-red-50 text-red-700 border-red-200';
+            } else {
+                banner.className = 'rounded-xl px-4 py-2.5 text-xs font-semibold border bg-emerald-50 text-emerald-800 border-emerald-200';
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('footerYear').textContent = new Date().getFullYear();
+            linksData = loadLocalLinks();
+            updateStorageBadge();
             handleHashChange();
             window.addEventListener('hashchange', handleHashChange);
             lucide.createIcons();
@@ -242,14 +315,20 @@
                         await signInAnonymously(auth);
                     }
                     currentUser = auth.currentUser;
+                    isFirebaseSynced = true;
+                    updateStorageBadge();
                     startLinksListener();
                 } catch (err) {
-                    console.error('Firebase init error:', err);
+                    console.error('Firebase init error, using localStorage:', err);
+                    isFirebaseSynced = false;
+                    updateStorageBadge();
                     document.getElementById('publicLoadingState').classList.add('hidden');
                     renderPublicLinks();
-                    showToast('Database connection issue', 'error');
+                    showToast('Using local browser storage', 'error');
                 }
             } else {
+                isFirebaseSynced = false;
+                updateStorageBadge();
                 document.getElementById('publicLoadingState').classList.add('hidden');
                 renderPublicLinks();
             }
@@ -268,14 +347,17 @@
                     });
                     items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                     linksData = items;
+                    saveLocalLinks(linksData);
                     renderPublicLinks();
                     renderAdminLinks();
                 },
                 (err) => {
                     console.error('Firestore listener error:', err);
+                    isFirebaseSynced = false;
+                    updateStorageBadge();
                     document.getElementById('publicLoadingState').classList.add('hidden');
                     renderPublicLinks();
-                    showToast('Could not load links', 'error');
+                    showToast('Could not sync Firebase links', 'error');
                 }
             );
         }
@@ -310,52 +392,54 @@
         function syncAdminPanels() {
             document.getElementById('adminLoginCard').classList.toggle('hidden', isAdminLoggedIn);
             document.getElementById('adminDashboardCard').classList.toggle('hidden', !isAdminLoggedIn);
+            updateStorageBadge();
             if (isAdminLoggedIn) {
                 renderAdminLinks();
             }
         }
 
-        async function sha256Hex(text) {
-            const data = new TextEncoder().encode(text);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hashBuffer))
-                .map((b) => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
-
-        window.handleAdminLogin = async function(event) {
+        window.handleAdminLogin = function(event) {
             event.preventDefault();
-            const username = document.getElementById('adminUsernameInput').value.trim();
-            const password = document.getElementById('adminPasswordInput').value;
+            const username = document.getElementById('adminUsernameInput').value.trim().toLowerCase();
+            const password = document.getElementById('adminPasswordInput').value.trim();
             const errEl = document.getElementById('loginErrorMsg');
             errEl.classList.add('hidden');
+            errEl.textContent = '';
+
+            if (!username || !password) {
+                errEl.textContent = 'Please enter both username and password.';
+                errEl.classList.remove('hidden');
+                return;
+            }
 
             try {
-                const [userHash, passHash] = await Promise.all([
-                    sha256Hex(username),
-                    sha256Hex(password)
-                ]);
+                const userHash = sha256PureJs(username);
+                const passHash = sha256PureJs(password);
+                const expectedUserHash = sha256PureJs('luffy');
+                const expectedPassHash = sha256PureJs('mouneshgouda123');
 
-                if (userHash === ADMIN_USER_SHA256 && passHash === ADMIN_PASS_SHA256) {
+                if (userHash === expectedUserHash && passHash === expectedPassHash) {
                     isAdminLoggedIn = true;
                     document.getElementById('adminLoginForm').reset();
                     syncAdminPanels();
-                    showToast('Logged in');
+                    setAdminFeedback('Signed in successfully. Changes are saved to ' + (isFirebaseSynced ? 'Firebase Firestore.' : 'this browser’s local storage.'), 'success');
+                    showToast('Signed in');
                 } else {
-                    errEl.textContent = 'Invalid username or password.';
+                    errEl.textContent = 'Incorrect username or password. Please try again.';
                     errEl.classList.remove('hidden');
                 }
             } catch (err) {
-                console.error('Login check error:', err);
-                errEl.textContent = 'Unable to verify credentials.';
+                console.error('Login verification error:', err);
+                errEl.textContent = 'Unable to verify credentials right now.';
                 errEl.classList.remove('hidden');
             }
         };
 
         window.handleAdminLogout = function() {
             isAdminLoggedIn = false;
+            setAdminFeedback('');
             syncAdminPanels();
-            showToast('Logged out');
+            showToast('Signed out');
         };
 
         function renderPublicLinks() {
@@ -447,13 +531,20 @@
             const titleInput = document.getElementById('linkTitleInput');
             const urlInput = document.getElementById('linkUrlInput');
             const title = titleInput.value.trim();
-            const url = urlInput.value.trim();
-            if (!title || !url) return;
+            let url = urlInput.value.trim();
+            if (!title || !url) {
+                setAdminFeedback('Please enter both a title and a valid URL.', 'error');
+                return;
+            }
+
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
 
             const newLink = { title, url, createdAt: Date.now() };
 
             try {
-                if (db && currentUser) {
+                if (isFirebaseSynced && db && currentUser) {
                     const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'resource_links');
                     await addDoc(linksCol, newLink);
                 } else {
@@ -464,9 +555,11 @@
                 }
                 titleInput.value = '';
                 urlInput.value = '';
+                setAdminFeedback(`Added "${title}" successfully.`, 'success');
                 showToast('Link added');
             } catch (err) {
                 console.error('Add link error:', err);
+                setAdminFeedback('Could not add link. Please try again.', 'error');
                 showToast('Could not add link', 'error');
             }
         };
@@ -474,8 +567,9 @@
         window.removeLink = async function(id) {
             if (!isAdminLoggedIn || !id) return;
 
+            const target = linksData.find((item) => item.id === id);
             try {
-                if (db && currentUser) {
+                if (isFirebaseSynced && db && currentUser) {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'resource_links', id);
                     await deleteDoc(docRef);
                 } else {
@@ -484,9 +578,11 @@
                     renderPublicLinks();
                     renderAdminLinks();
                 }
+                setAdminFeedback(`Removed "${target ? target.title : 'link'}".`, 'success');
                 showToast('Link removed');
             } catch (err) {
                 console.error('Remove link error:', err);
+                setAdminFeedback('Could not remove link. Please try again.', 'error');
                 showToast('Could not remove link', 'error');
             }
         };
