@@ -418,6 +418,28 @@
             lucide.createIcons();
         }
 
+        const LOCAL_STORAGE_KEY = 'guru_mounesh_resource_links_v1';
+
+        function loadLocalLinks() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (err) {
+                console.error('Local storage read error:', err);
+                return [];
+            }
+        }
+
+        function saveLocalLinks(items) {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
+            } catch (err) {
+                console.error('Local storage write error:', err);
+            }
+        }
+
         window.handleAddLink = async function(event) {
             event.preventDefault();
             if (!isAdminLoggedIn) return;
@@ -436,6 +458,7 @@
                     await addDoc(linksCol, newLink);
                 } else {
                     linksData.unshift({ id: 'local-' + Date.now(), ...newLink });
+                    saveLocalLinks(linksData);
                     renderPublicLinks();
                     renderAdminLinks();
                 }
@@ -457,6 +480,7 @@
                     await deleteDoc(docRef);
                 } else {
                     linksData = linksData.filter((item) => item.id !== id);
+                    saveLocalLinks(linksData);
                     renderPublicLinks();
                     renderAdminLinks();
                 }
