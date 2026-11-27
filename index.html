@@ -3,633 +3,467 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guru.Mounesh (@guru.mounesh) • Resource Links</title>
-    <!-- Google Fonts: Inter -->
+    <title>@guru.mounesh • Resource Links</title>
+    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
-        }
+        };
     </script>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-amber-200 selection:text-slate-950 min-h-screen flex flex-col">
-
-    <!-- Top Accent Bar -->
-    <div class="h-1 w-full bg-gradient-to-r from-amber-400 via-yellow-500 to-indigo-950 sticky top-0 z-40"></div>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
 
     <!-- Main Container -->
-    <main class="flex-grow w-full max-w-2xl mx-auto px-4 sm:px-6 pt-8 pb-16">
+    <div class="w-full max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow">
 
-        <!-- ==================== MAIN RESOURCE PAGE ==================== -->
-        <div id="publicView">
-            <!-- Clean Header for @guru.mounesh -->
-            <header class="text-center mb-8">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-indigo-950 text-amber-400 flex items-center justify-center font-extrabold text-xl sm:text-2xl mx-auto mb-3 shadow-sm border-2 border-amber-400">
-                    GM
-                </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-indigo-950 tracking-tight">Guru.Mounesh</h1>
-                <p class="text-xs sm:text-sm font-bold text-amber-700 mt-0.5">@guru.mounesh</p>
-                <p class="text-sm text-slate-600 mt-2">Resource links from recent videos — simple, fast, and easy to open.</p>
-            </header>
-
-            <!-- Loading State -->
-            <div id="publicLoadingState" class="text-center py-10 bg-white rounded-2xl border border-slate-200/80">
-                <div class="w-7 h-7 border-2 border-amber-400 border-t-indigo-950 rounded-full animate-spin mx-auto mb-2"></div>
-                <p class="text-xs font-medium text-slate-500">Loading resource links...</p>
+        <!-- Top Header -->
+        <header class="flex items-center justify-between gap-4 pb-6 border-b border-slate-200">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">@guru.mounesh</h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Shared resource links</p>
             </div>
+            <button id="navToggleBtn" type="button" onclick="toggleView()"
+                    class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 active:scale-95 transition">
+                Admin
+            </button>
+        </header>
 
-            <!-- Resource Links List -->
-            <section aria-label="Resource Links">
-                <div id="publicLinksList" class="space-y-3"></div>
-
-                <!-- Empty State -->
-                <div id="publicEmptyState" class="hidden text-center py-12 px-4 bg-white rounded-2xl border border-slate-200/80">
-                    <p class="text-sm font-semibold text-indigo-950">No resource links added yet.</p>
-                    <p class="text-xs text-slate-500 mt-1">Check back soon for new links from @guru.mounesh.</p>
-                </div>
-            </section>
+        <!-- Toast Notification (replaces alert/confirm) -->
+        <div id="statusToast"
+             class="hidden mt-4 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium bg-slate-900 text-white shadow-sm">
         </div>
 
-        <!-- ==================== #ADMIN LOGIN & MANAGEMENT ==================== -->
-        <div id="adminView" class="hidden space-y-6">
-            <div class="flex items-center justify-between">
-                <button type="button" onclick="navigateTo('home')"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-950 transition">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                    <span>Back to Links</span>
-                </button>
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">#admin</span>
+        <!-- ==================== HOME VIEW ==================== -->
+        <main id="homeView" class="mt-6">
+            <div id="homeLinksList" class="space-y-3"></div>
+
+            <div id="homeEmptyState" class="hidden text-center py-12 px-4 bg-white rounded-2xl border border-slate-200">
+                <p class="text-sm font-semibold text-slate-700">No links available right now.</p>
+                <p class="text-xs text-slate-500 mt-1">New resource links will appear here soon.</p>
             </div>
+        </main>
 
-            <!-- Admin Login Form -->
-            <section id="adminLoginCard" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 max-w-md mx-auto">
-                <div class="text-center mb-5">
-                    <div class="w-11 h-11 rounded-xl bg-indigo-950 text-amber-400 flex items-center justify-center mx-auto mb-2.5">
-                        <i data-lucide="lock" class="w-5 h-5"></i>
-                    </div>
-                    <h2 class="text-lg font-extrabold text-indigo-950">Admin Login</h2>
-                    <p class="text-xs text-slate-500 mt-1">Sign in to add or remove resource links.</p>
-                </div>
+        <!-- ==================== ADMIN VIEW ==================== -->
+        <section id="adminView" class="hidden mt-6">
 
-                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4">
+            <!-- Login Card -->
+            <div id="adminLoginBox" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-2xs">
+                <h2 class="text-lg font-bold text-slate-900">Admin Login</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Sign in to add or delete resource links.</p>
+
+                <form id="loginForm" onsubmit="handleLogin(event)" class="mt-5 space-y-4">
                     <div>
-                        <label for="adminUsernameInput" class="block text-xs font-bold text-slate-700 mb-1">Username</label>
-                        <input type="text" id="adminUsernameInput" required autocomplete="username" placeholder="Enter username"
-                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-400/20">
+                        <label for="usernameInput" class="block text-xs font-semibold text-slate-700 mb-1.5">Username</label>
+                        <input id="usernameInput" type="text" required autocomplete="username" placeholder="Enter username"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-slate-900">
                     </div>
 
                     <div>
-                        <label for="adminPasswordInput" class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-                        <input type="password" id="adminPasswordInput" required autocomplete="current-password" placeholder="Enter password"
-                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-400/20">
+                        <label for="passwordInput" class="block text-xs font-semibold text-slate-700 mb-1.5">Password</label>
+                        <input id="passwordInput" type="password" required autocomplete="current-password" placeholder="Enter password"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-slate-900">
                     </div>
 
-                    <p id="loginErrorMsg" class="hidden text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl p-2.5"></p>
+                    <p id="loginError" class="hidden text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5"></p>
 
                     <button type="submit"
-                            class="w-full py-2.5 rounded-xl bg-indigo-950 hover:bg-indigo-900 text-white font-bold text-sm transition">
+                            class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold active:scale-[0.99] transition">
                         Login
                     </button>
                 </form>
+            </div>
 
-                <!-- Security Note -->
-                <div class="mt-5 pt-4 border-t border-slate-100 text-[11px] text-slate-500 leading-relaxed">
-                    <span class="font-bold text-slate-700">Security note:</span> Client-side hash checks hide plain text from casual reading, but anything in browser HTML/JS can still be inspected in DevTools. For strong production protection, use Firebase Authentication + Firestore security rules.
-                </div>
-            </section>
-
-            <!-- Admin Link Manager (Shown after login) -->
-            <section id="adminDashboardCard" class="hidden space-y-5">
-                <div class="bg-indigo-950 text-white rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+            <!-- Authenticated Link Manager -->
+            <div id="adminPanelBox" class="hidden space-y-6">
+                <div class="flex items-center justify-between gap-3 bg-white rounded-2xl border border-slate-200 p-4 sm:p-5">
                     <div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <h2 class="text-base font-extrabold">Manage Resource Links</h2>
-                            <span id="storageStatusBadge"
-                                  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">
-                                <span id="storageStatusDot" class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                <span id="storageStatusText">Local Storage (This Browser)</span>
-                            </span>
-                        </div>
-                        <p class="text-xs text-indigo-200 mt-0.5">@guru.mounesh</p>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900">Manage Links</h2>
+                        <p class="text-xs text-slate-500">Saved locally in this browser</p>
                     </div>
-                    <button type="button" onclick="handleAdminLogout()"
-                            class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition">
-                        Sign Out
+                    <button type="button" onclick="handleLogout()"
+                            class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-95 transition">
+                        Logout
                     </button>
                 </div>
 
-                <!-- Status Banner for Admin Actions -->
-                <div id="adminFeedbackBanner" class="hidden rounded-xl px-4 py-2.5 text-xs font-semibold border"></div>
+                <!-- Add Link Form -->
+                <form id="addLinkForm" onsubmit="handleAddLink(event)" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900">Add New Link</h3>
 
-                <!-- Add Link Form (Title + URL) -->
-        const MANUAL_FIREBASE_CONFIG = null;
-        // Example:
-        // const MANUAL_FIREBASE_CONFIG = {
-        //     apiKey: "YOUR_API_KEY",
-        //     authDomain: "YOUR_PROJECT.firebaseapp.com",
-        //     projectId: "YOUR_PROJECT_ID",
-        //     storageBucket: "YOUR_PROJECT.appspot.com",
-        //     messagingSenderId: "YOUR_SENDER_ID",
-        //     appId: "YOUR_APP_ID"
-        // };
+                    <div>
+                        <label for="linkTitleInput" class="block text-xs font-semibold text-slate-700 mb-1.5">Title</label>
+                        <input id="linkTitleInput" type="text" required placeholder="e.g. Useful Guide or Video Link"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-slate-900">
+                    </div>
 
-        const appId = typeof __app_id !== 'undefined' && __app_id ? __app_id : 'guru-mounesh-links';
-        const LOCAL_STORAGE_KEY = 'guru_mounesh_resource_links_v1';
+                    <div>
+                        <label for="linkUrlInput" class="block text-xs font-semibold text-slate-700 mb-1.5">URL</label>
+                        <input id="linkUrlInput" type="text" required placeholder="example.com or https://example.com"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 focus:outline-none focus:border-slate-900">
+                    </div>
 
-        let firebaseConfig = null;
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    <button type="submit"
+                            class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold active:scale-[0.99] transition">
+                        Add Link
+                    </button>
+                </form>
+
+                <!-- Existing Links with Delete -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+                    <h3 class="text-sm font-bold text-slate-900 mb-3">Saved Links</h3>
+                    <div id="adminLinksList" class="space-y-2.5"></div>
+                    <p id="adminEmptyState" class="hidden text-xs text-slate-500 text-center py-6">No saved links yet.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Storage keys for links and initialization flag
+        const LINKS_STORAGE_KEY = 'guru_mounesh_links_v1';
+        const INITIALIZED_STORAGE_KEY = 'guru_mounesh_links_initialized_v1';
+
+        // Default sample links used only when localStorage has never been initialized
+        const DEFAULT_LINKS = [
+            {
+                id: 'sample-1',
+                title: 'Starter Resource Sheet',
+                url: 'https://example.com/resources'
+            },
+            {
+                id: 'sample-2',
+                title: 'Quick Reference Guide',
+                url: 'https://example.com/guide'
+            }
+        ];
+
+        // App state
+        let links = [];
+        let isLoggedIn = false;
+        let currentView = 'home'; // 'home' or 'admin'
+        let toastTimer = null;
+
+        /**
+         * Load links from localStorage, seeding sample links only on first-ever visit.
+         */
+        function loadLinks() {
             try {
-                firebaseConfig = JSON.parse(__firebase_config);
-            } catch (err) {
-                console.error('Failed to parse __firebase_config:', err);
-            }
-        } else if (MANUAL_FIREBASE_CONFIG && MANUAL_FIREBASE_CONFIG.apiKey) {
-            firebaseConfig = MANUAL_FIREBASE_CONFIG;
-        }
+                const alreadyInitialized = localStorage.getItem(INITIALIZED_STORAGE_KEY);
+                const raw = localStorage.getItem(LINKS_STORAGE_KEY);
 
-        // Pure-JavaScript SHA-256 implementation (works reliably on GitHub Pages without Web Crypto requirements)
-        function sha256PureJs(asciiOrUtf8) {
-            function rightRotate(value, amount) {
-                return (value >>> amount) | (value << (32 - amount));
-            }
-
-            const utf8Bytes = new TextEncoder().encode(String(asciiOrUtf8));
-            const bitLength = utf8Bytes.length * 8;
-
-            const k = [
-                0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-                0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-                0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-                0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-                0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-                0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-            ];
-
-            let h0 = 0x6a09e667;
-            let h1 = 0xbb67ae85;
-            let h2 = 0x3c6ef372;
-            let h3 = 0xa54ff53a;
-            let h4 = 0x510e527f;
-            let h5 = 0x9b05688c;
-            let h6 = 0x1f83d9ab;
-            let h7 = 0x5be0cd19;
-
-            // Pre-processing: pad message to 512-bit (64-byte) blocks
-            const paddedLength = (((utf8Bytes.length + 8) >>> 6) + 1) * 64;
-            const padded = new Uint8Array(paddedLength);
-            padded.set(utf8Bytes);
-            padded[utf8Bytes.length] = 0x80;
-
-            const view = new DataView(padded.buffer);
-            const highBits = Math.floor(bitLength / 0x100000000);
-            const lowBits = bitLength >>> 0;
-            view.setUint32(paddedLength - 8, highBits, false);
-            view.setUint32(paddedLength - 4, lowBits, false);
-
-            const w = new Uint32Array(64);
-
-            for (let offset = 0; offset < paddedLength; offset += 64) {
-                for (let i = 0; i < 16; i++) {
-                    w[i] = view.getUint32(offset + i * 4, false);
-                }
-                for (let i = 16; i < 64; i++) {
-                    const s0 = rightRotate(w[i - 15], 7) ^ rightRotate(w[i - 15], 18) ^ (w[i - 15] >>> 3);
-                    const s1 = rightRotate(w[i - 2], 17) ^ rightRotate(w[i - 2], 19) ^ (w[i - 2] >>> 10);
-                    w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
-                }
-
-                let a = h0;
-                let b = h1;
-                let c = h2;
-                let d = h3;
-                let e = h4;
-                let f = h5;
-                let g = h6;
-                let h = h7;
-
-                for (let i = 0; i < 64; i++) {
-                    const S1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
-                    const ch = (e & f) ^ (~e & g);
-                    const temp1 = (h + S1 + ch + k[i] + w[i]) >>> 0;
-                    const S0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
-                    const maj = (a & b) ^ (a & c) ^ (b & c);
-                    const temp2 = (S0 + maj) >>> 0;
-
-                    h = g;
-                    g = f;
-                    f = e;
-                    e = (d + temp1) >>> 0;
-                    d = c;
-                    c = b;
-                    b = a;
-                    a = (temp1 + temp2) >>> 0;
-                }
-
-                h0 = (h0 + a) >>> 0;
-                h1 = (h1 + b) >>> 0;
-                h2 = (h2 + c) >>> 0;
-                h3 = (h3 + d) >>> 0;
-                h4 = (h4 + e) >>> 0;
-                h5 = (h5 + f) >>> 0;
-                h6 = (h6 + g) >>> 0;
-                h7 = (h7 + h) >>> 0;
-            }
-
-            return [h0, h1, h2, h3, h4, h5, h6, h7]
-                .map((val) => val.toString(16).padStart(8, '0'))
-                .join('');
-        }
-
-        let db = null;
-        let auth = null;
-        let currentUser = null;
-        let isAdminLoggedIn = false;
-        let isFirebaseSynced = false;
-        let linksData = [];
-
-        function updateStorageBadge() {
-            const badgeText = document.getElementById('storageStatusText');
-            const badgeDot = document.getElementById('storageStatusDot');
-            const badgeEl = document.getElementById('storageStatusBadge');
-            if (!badgeText || !badgeDot || !badgeEl) return;
-
-            if (isFirebaseSynced && db) {
-                badgeText.textContent = 'Firebase Firestore Synced';
-                badgeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-200 border border-emerald-400/40';
-            } else {
-                badgeText.textContent = 'Local Storage (This Browser)';
-                badgeDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-                badgeEl.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-200 border border-amber-400/40';
-            }
-        }
-
-        function setAdminFeedback(message, type = 'success') {
-            const banner = document.getElementById('adminFeedbackBanner');
-            if (!banner) return;
-            if (!message) {
-                banner.classList.add('hidden');
-                banner.textContent = '';
-                return;
-            }
-            banner.textContent = message;
-            banner.classList.remove('hidden');
-            if (type === 'error') {
-                banner.className = 'rounded-xl px-4 py-2.5 text-xs font-semibold border bg-red-50 text-red-700 border-red-200';
-            } else {
-                banner.className = 'rounded-xl px-4 py-2.5 text-xs font-semibold border bg-emerald-50 text-emerald-800 border-emerald-200';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            document.getElementById('footerYear').textContent = new Date().getFullYear();
-            linksData = loadLocalLinks();
-            updateStorageBadge();
-            handleHashChange();
-            window.addEventListener('hashchange', handleHashChange);
-            lucide.createIcons();
-
-            if (firebaseConfig && firebaseConfig.apiKey && firebaseConfig.projectId) {
-                try {
-                    const app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
+                if (raw !== null) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) {
+                        return parsed;
                     }
-                    currentUser = auth.currentUser;
-                    isFirebaseSynced = true;
-                    updateStorageBadge();
-                    startLinksListener();
-                } catch (err) {
-                    console.error('Firebase init error, using localStorage:', err);
-                    isFirebaseSynced = false;
-                    updateStorageBadge();
-                    document.getElementById('publicLoadingState').classList.add('hidden');
-                    renderPublicLinks();
-                    showToast('Using local browser storage', 'error');
                 }
-            } else {
-                isFirebaseSynced = false;
-                updateStorageBadge();
-                document.getElementById('publicLoadingState').classList.add('hidden');
-                renderPublicLinks();
-            }
-        });
 
-        function startLinksListener() {
-            if (!db || !currentUser) return;
-            const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'resource_links');
-            onSnapshot(
-                linksCol,
-                (snapshot) => {
-                    document.getElementById('publicLoadingState').classList.add('hidden');
-                    const items = [];
-                    snapshot.forEach((docSnap) => {
-                        items.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                    linksData = items;
-                    saveLocalLinks(linksData);
-                    renderPublicLinks();
-                    renderAdminLinks();
-                },
-                (err) => {
-                    console.error('Firestore listener error:', err);
-                    isFirebaseSynced = false;
-                    updateStorageBadge();
-                    document.getElementById('publicLoadingState').classList.add('hidden');
-                    renderPublicLinks();
-                    showToast('Could not sync Firebase links', 'error');
+                if (!alreadyInitialized) {
+                    localStorage.setItem(INITIALIZED_STORAGE_KEY, 'true');
+                    localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(DEFAULT_LINKS));
+                    return [...DEFAULT_LINKS];
                 }
-            );
-        }
 
-        function handleHashChange() {
-            if (window.location.hash.toLowerCase() === '#admin') {
-                showSection('admin');
-            } else {
-                showSection('home');
+                return [];
+            } catch (err) {
+                console.error('Failed to read links from localStorage:', err);
+                return [...DEFAULT_LINKS];
             }
         }
 
-        window.navigateTo = function(target) {
-            if (target === 'admin') {
-                window.location.hash = '#admin';
-                showSection('admin');
-            } else {
-                window.location.hash = '#home';
-                showSection('home');
+        /**
+         * Persist current links array to localStorage.
+         */
+        function saveLinks() {
+            try {
+                localStorage.setItem(INITIALIZED_STORAGE_KEY, 'true');
+                localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(links));
+            } catch (err) {
+                console.error('Failed to save links to localStorage:', err);
+                showToast('Could not save changes in browser storage.');
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        function showSection(section) {
-            const isAdmin = section === 'admin';
-            document.getElementById('publicView').classList.toggle('hidden', isAdmin);
-            document.getElementById('adminView').classList.toggle('hidden', !isAdmin);
-            syncAdminPanels();
-            lucide.createIcons();
         }
 
-        function syncAdminPanels() {
-            document.getElementById('adminLoginCard').classList.toggle('hidden', isAdminLoggedIn);
-            document.getElementById('adminDashboardCard').classList.toggle('hidden', !isAdminLoggedIn);
-            updateStorageBadge();
-            if (isAdminLoggedIn) {
+        /**
+         * Normalize user-entered URL so bare domains like example.com get https://
+         */
+        function normalizeUrl(rawUrl) {
+            const trimmed = String(rawUrl || '').trim();
+            if (!trimmed) return '';
+            if (/^https?:\/\//i.test(trimmed)) {
+                return trimmed;
+            }
+            return 'https://' + trimmed;
+        }
+
+        /**
+         * Show a short non-blocking status message.
+         */
+        function showToast(message) {
+            const toast = document.getElementById('statusToast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+
+            if (toastTimer) {
+                clearTimeout(toastTimer);
+            }
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2200);
+        }
+
+        /**
+         * Escape HTML text nodes safely.
+         */
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        /**
+         * Switch between Home and Admin views.
+         */
+        function setView(viewName) {
+            currentView = viewName === 'admin' ? 'admin' : 'home';
+            const homeView = document.getElementById('homeView');
+            const adminView = document.getElementById('adminView');
+            const navBtn = document.getElementById('navToggleBtn');
+
+            if (currentView === 'admin') {
+                homeView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                navBtn.textContent = 'Home';
+                syncAdminVisibility();
+            } else {
+                adminView.classList.add('hidden');
+                homeView.classList.remove('hidden');
+                navBtn.textContent = 'Admin';
+                renderHomeLinks();
+            }
+        }
+
+        function toggleView() {
+            setView(currentView === 'home' ? 'admin' : 'home');
+        }
+
+        /**
+         * Show either login form or admin link manager based on login state.
+         */
+        function syncAdminVisibility() {
+            const loginBox = document.getElementById('adminLoginBox');
+            const panelBox = document.getElementById('adminPanelBox');
+
+            if (isLoggedIn) {
+                loginBox.classList.add('hidden');
+                panelBox.classList.remove('hidden');
                 renderAdminLinks();
+            } else {
+                panelBox.classList.add('hidden');
+                loginBox.classList.remove('hidden');
             }
         }
 
-        window.handleAdminLogin = function(event) {
+        /**
+         * Validate admin credentials (username trimmed & case-insensitive, password exact trimmed).
+         */
+        function handleLogin(event) {
             event.preventDefault();
-            const username = document.getElementById('adminUsernameInput').value.trim().toLowerCase();
-            const password = document.getElementById('adminPasswordInput').value.trim();
-            const errEl = document.getElementById('loginErrorMsg');
-            errEl.classList.add('hidden');
-            errEl.textContent = '';
 
-            if (!username || !password) {
-                errEl.textContent = 'Please enter both username and password.';
-                errEl.classList.remove('hidden');
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const errorEl = document.getElementById('loginError');
+
+            const username = (usernameInput.value || '').trim().toLowerCase();
+            const password = (passwordInput.value || '').trim();
+
+            if (username === 'luffy' && password === 'mouneshgouda123') {
+                errorEl.classList.add('hidden');
+                errorEl.textContent = '';
+                isLoggedIn = true;
+                usernameInput.value = '';
+                passwordInput.value = '';
+                syncAdminVisibility();
+                showToast('Logged in to Admin.');
+            } else {
+                errorEl.textContent = 'Invalid username or password. Please try again.';
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Log out of admin view.
+         */
+        function handleLogout() {
+            isLoggedIn = false;
+            syncAdminVisibility();
+            showToast('Logged out.');
+        }
+
+        /**
+         * Add a new link from Admin form.
+         */
+        function handleAddLink(event) {
+            event.preventDefault();
+            if (!isLoggedIn) return;
+
+            const titleInput = document.getElementById('linkTitleInput');
+            const urlInput = document.getElementById('linkUrlInput');
+
+            const title = (titleInput.value || '').trim();
+            const url = normalizeUrl(urlInput.value);
+
+            if (!title || !url) {
+                showToast('Please enter both a title and a URL.');
                 return;
             }
 
+            const newItem = {
+                id: 'link-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+                title,
+                url
+            };
+
+            links.unshift(newItem);
+            saveLinks();
+
+            titleInput.value = '';
+            urlInput.value = '';
+
+            renderAdminLinks();
+            renderHomeLinks();
+            showToast('Link added.');
+        }
+
+        /**
+         * Delete a link by id.
+         */
+        function handleDeleteLink(linkId) {
+            if (!isLoggedIn || !linkId) return;
+
+            links = links.filter((item) => item.id !== linkId);
+            saveLinks();
+            renderAdminLinks();
+            renderHomeLinks();
+            showToast('Link deleted.');
+        }
+
+        /**
+         * Copy a URL using document.execCommand('copy') for broad compatibility.
+         */
+        function copyLinkUrl(url) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = url;
+            tempInput.setAttribute('readonly', '');
+            tempInput.style.position = 'fixed';
+            tempInput.style.left = '-9999px';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+
+            let copied = false;
             try {
-                const userHash = sha256PureJs(username);
-                const passHash = sha256PureJs(password);
-                const expectedUserHash = sha256PureJs('luffy');
-                const expectedPassHash = sha256PureJs('mouneshgouda123');
-
-                if (userHash === expectedUserHash && passHash === expectedPassHash) {
-                    isAdminLoggedIn = true;
-                    document.getElementById('adminLoginForm').reset();
-                    syncAdminPanels();
-                    setAdminFeedback('Signed in successfully. Changes are saved to ' + (isFirebaseSynced ? 'Firebase Firestore.' : 'this browser’s local storage.'), 'success');
-                    showToast('Signed in');
-                } else {
-                    errEl.textContent = 'Incorrect username or password. Please try again.';
-                    errEl.classList.remove('hidden');
-                }
+                copied = document.execCommand('copy');
             } catch (err) {
-                console.error('Login verification error:', err);
-                errEl.textContent = 'Unable to verify credentials right now.';
-                errEl.classList.remove('hidden');
+                copied = false;
             }
-        };
 
-        window.handleAdminLogout = function() {
-            isAdminLoggedIn = false;
-            setAdminFeedback('');
-            syncAdminPanels();
-            showToast('Signed out');
-        };
+            document.body.removeChild(tempInput);
+            showToast(copied ? 'Link copied to clipboard.' : 'Could not copy link.');
+        }
 
-        function renderPublicLinks() {
-            const listEl = document.getElementById('publicLinksList');
-            const emptyEl = document.getElementById('publicEmptyState');
+        /**
+         * Render public links on Home view.
+         */
+        function renderHomeLinks() {
+            const listEl = document.getElementById('homeLinksList');
+            const emptyEl = document.getElementById('homeEmptyState');
 
-            if (linksData.length === 0) {
+            if (!links.length) {
                 listEl.innerHTML = '';
                 emptyEl.classList.remove('hidden');
                 return;
             }
 
             emptyEl.classList.add('hidden');
-            listEl.innerHTML = linksData.map((item) => `
-                <article class="bg-white rounded-2xl border border-slate-200/90 hover:border-amber-400 p-4 sm:p-5 transition shadow-2xs">
-                    <h2 class="text-base sm:text-lg font-bold text-indigo-950 break-words">${escapeHtml(item.title)}</h2>
-                    <p class="text-xs text-slate-500 truncate mt-1">${escapeHtml(item.url)}</p>
-                    <div class="flex items-center justify-end gap-2 mt-3.5 pt-3 border-t border-slate-100">
-                        <button type="button" onclick="copyUrl('${escapeAttr(item.url)}')"
-                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-amber-100 text-indigo-950 text-xs font-bold transition active:scale-95">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            <span>Copy</span>
-                        </button>
-                        <a href="${escapeAttr(item.url)}" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-950 hover:bg-amber-400 hover:text-indigo-950 text-white text-xs font-bold transition active:scale-95">
-                            <span>Open</span>
-                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                        </a>
-                    </div>
-                </article>
-            `).join('');
+            listEl.innerHTML = links.map((item) => {
+                const safeTitle = escapeHtml(item.title);
+                const safeUrl = escapeHtml(item.url);
+                const encodedUrlForJs = encodeURIComponent(item.url);
 
-            lucide.createIcons();
+                return `
+                    <article class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 flex items-center justify-between gap-4 hover:border-slate-300 transition">
+                        <div class="min-w-0 flex-1">
+                            <h2 class="text-sm sm:text-base font-bold text-slate-900 break-words">${safeTitle}</h2>
+                            <a href="${safeUrl}" target="_blank" rel="noopener noreferrer"
+                               class="inline-block text-xs sm:text-sm text-blue-600 hover:underline break-all mt-1">
+                                ${safeUrl}
+                            </a>
+                        </div>
+                        <button type="button" onclick="copyLinkUrl(decodeURIComponent('${encodedUrlForJs}'))"
+                                class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-95 transition">
+                            Copy
+                        </button>
+                    </article>
+                `;
+            }).join('');
         }
 
+        /**
+         * Render links inside Admin view with Delete buttons.
+         */
         function renderAdminLinks() {
             const listEl = document.getElementById('adminLinksList');
-            const countEl = document.getElementById('adminLinksCount');
-            countEl.textContent = `${linksData.length}`;
+            const emptyEl = document.getElementById('adminEmptyState');
 
-            if (linksData.length === 0) {
-                listEl.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">No links yet. Add one above.</p>`;
+            if (!links.length) {
+                listEl.innerHTML = '';
+                emptyEl.classList.remove('hidden');
                 return;
             }
 
-            listEl.innerHTML = linksData.map((item) => `
-                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-sm font-bold text-indigo-950 truncate">${escapeHtml(item.title)}</p>
-                        <p class="text-xs text-slate-500 truncate">${escapeHtml(item.url)}</p>
+            emptyEl.classList.add('hidden');
+            listEl.innerHTML = links.map((item) => {
+                const safeTitle = escapeHtml(item.title);
+                const safeUrl = escapeHtml(item.url);
+                const encodedIdForJs = encodeURIComponent(item.id);
+
+                return `
+                    <div class="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-semibold text-slate-900 truncate">${safeTitle}</p>
+                            <p class="text-xs text-slate-500 truncate mt-0.5">${safeUrl}</p>
+                        </div>
+                        <button type="button" onclick="handleDeleteLink(decodeURIComponent('${encodedIdForJs}'))"
+                                class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 active:scale-95 transition">
+                            Delete
+                        </button>
                     </div>
-                    <button type="button" onclick="removeLink('${escapeAttr(item.id)}')"
-                            class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold transition">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                        <span>Remove</span>
-                    </button>
-                </div>
-            `).join('');
-
-            lucide.createIcons();
+                `;
+            }).join('');
         }
 
-        const LOCAL_STORAGE_KEY = 'guru_mounesh_resource_links_v1';
-
-        function loadLocalLinks() {
-            try {
-                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-                if (!raw) return [];
-                const parsed = JSON.parse(raw);
-                return Array.isArray(parsed) ? parsed : [];
-            } catch (err) {
-                console.error('Local storage read error:', err);
-                return [];
-            }
-        }
-
-        function saveLocalLinks(items) {
-            try {
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
-            } catch (err) {
-                console.error('Local storage write error:', err);
-            }
-        }
-
-        window.handleAddLink = async function(event) {
-            event.preventDefault();
-            if (!isAdminLoggedIn) return;
-
-            const titleInput = document.getElementById('linkTitleInput');
-            const urlInput = document.getElementById('linkUrlInput');
-            const title = titleInput.value.trim();
-            let url = urlInput.value.trim();
-            if (!title || !url) {
-                setAdminFeedback('Please enter both a title and a valid URL.', 'error');
-                return;
-            }
-
-            if (!/^https?:\/\//i.test(url)) {
-                url = 'https://' + url;
-            }
-
-            const newLink = { title, url, createdAt: Date.now() };
-
-            try {
-                if (isFirebaseSynced && db && currentUser) {
-                    const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'resource_links');
-                    await addDoc(linksCol, newLink);
-                } else {
-                    linksData.unshift({ id: 'local-' + Date.now(), ...newLink });
-                    saveLocalLinks(linksData);
-                    renderPublicLinks();
-                    renderAdminLinks();
-                }
-                titleInput.value = '';
-                urlInput.value = '';
-                setAdminFeedback(`Added "${title}" successfully.`, 'success');
-                showToast('Link added');
-            } catch (err) {
-                console.error('Add link error:', err);
-                setAdminFeedback('Could not add link. Please try again.', 'error');
-                showToast('Could not add link', 'error');
-            }
-        };
-
-        window.removeLink = async function(id) {
-            if (!isAdminLoggedIn || !id) return;
-
-            const target = linksData.find((item) => item.id === id);
-            try {
-                if (isFirebaseSynced && db && currentUser) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'resource_links', id);
-                    await deleteDoc(docRef);
-                } else {
-                    linksData = linksData.filter((item) => item.id !== id);
-                    saveLocalLinks(linksData);
-                    renderPublicLinks();
-                    renderAdminLinks();
-                }
-                setAdminFeedback(`Removed "${target ? target.title : 'link'}".`, 'success');
-                showToast('Link removed');
-            } catch (err) {
-                console.error('Remove link error:', err);
-                setAdminFeedback('Could not remove link. Please try again.', 'error');
-                showToast('Could not remove link', 'error');
-            }
-        };
-
-        window.copyUrl = function(url) {
-            const ta = document.createElement('textarea');
-            ta.value = url;
-            ta.style.position = 'fixed';
-            ta.style.left = '-9999px';
-            document.body.appendChild(ta);
-            ta.select();
-            try {
-                document.execCommand('copy');
-                showToast('Link copied');
-            } catch (err) {
-                showToast('Copy failed', 'error');
-            }
-            document.body.removeChild(ta);
-        };
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const bg = type === 'error' ? 'bg-red-600 text-white' : 'bg-indigo-950 text-white border border-amber-400/50';
-            toast.className = `pointer-events-auto px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition-all duration-300 opacity-0 translate-y-2 ${bg}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            requestAnimationFrame(() => toast.classList.remove('opacity-0', 'translate-y-2'));
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 2000);
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function escapeAttr(str) {
-            return escapeHtml(str).replace(/`/g, '&#96;');
-        }
+        // Initialize app on load
+        document.addEventListener('DOMContentLoaded', () => {
+            links = loadLinks();
+            renderHomeLinks();
+            setView('home');
+        });
     </script>
 </body>
 </html>
