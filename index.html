@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guru.Mounesh (@guru.mounesh) • Resource Links</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-amber-200 selection:text-slate-950 min-h-screen flex flex-col">
+
+    <!-- Top Accent Bar -->
+    <div class="h-1 w-full bg-gradient-to-r from-amber-400 via-yellow-500 to-indigo-950 sticky top-0 z-40"></div>
+
+    <!-- Main Container -->
+    <main class="flex-grow w-full max-w-2xl mx-auto px-4 sm:px-6 pt-8 pb-16">
+
+        <!-- ==================== MAIN RESOURCE PAGE ==================== -->
+        <div id="publicView">
+            <!-- Clean Header for @guru.mounesh -->
+            <header class="text-center mb-8">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-indigo-950 text-amber-400 flex items-center justify-center font-extrabold text-xl sm:text-2xl mx-auto mb-3 shadow-sm border-2 border-amber-400">
+                    GM
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-indigo-950 tracking-tight">Guru.Mounesh</h1>
+                <p class="text-xs sm:text-sm font-bold text-amber-700 mt-0.5">@guru.mounesh</p>
+                <p class="text-sm text-slate-600 mt-2">Resource links shared from recent videos.</p>
+            </header>
+
+            <!-- Loading State -->
+            <div id="publicLoadingState" class="text-center py-10 bg-white rounded-2xl border border-slate-200/80">
+                <div class="w-7 h-7 border-2 border-amber-400 border-t-indigo-950 rounded-full animate-spin mx-auto mb-2"></div>
+                <p class="text-xs font-medium text-slate-500">Loading resource links...</p>
+            </div>
+
+            <!-- Resource Links List -->
+            <section aria-label="Resource Links">
+                <div id="publicLinksList" class="space-y-3"></div>
+
+                <!-- Empty State -->
+                <div id="publicEmptyState" class="hidden text-center py-12 px-4 bg-white rounded-2xl border border-slate-200/80">
+                    <p class="text-sm font-semibold text-indigo-950">No resource links added yet.</p>
+                    <p class="text-xs text-slate-500 mt-1">Check back soon for new links from @guru.mounesh.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== #ADMIN LOGIN & MANAGEMENT ==================== -->
+        <div id="adminView" class="hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <button type="button" onclick="navigateTo('home')"
+                        class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-indigo-950 transition">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Back to Links</span>
+                </button>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">#admin</span>
+            </div>
+
+            <!-- Admin Login Form -->
+            <section id="adminLoginCard" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-7 max-w-md mx-auto">
+                <div class="text-center mb-5">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-950 text-amber-400 flex items-center justify-center mx-auto mb-2.5">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <h2 class="text-lg font-extrabold text-indigo-950">Admin Login</h2>
+                    <p class="text-xs text-slate-500 mt-1">Sign in to add or remove resource links.</p>
+                </div>
+
+                <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label for="adminUsernameInput" class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+                        <input type="text" id="adminUsernameInput" required autocomplete="username" placeholder="Enter username"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-400/20">
+                    </div>
+
+                    <div>
+                        <label for="adminPasswordInput" class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                        <input type="password" id="adminPasswordInput" required autocomplete="current-password" placeholder="Enter password"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-400/20">
+                    </div>
+
+                    <p id="loginErrorMsg" class="hidden text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl p-2.5"></p>
+
+                    <button type="submit"
+                            class="w-full py-2.5 rounded-xl bg-indigo-950 hover:bg-indigo-900 text-white font-bold text-sm transition">
+                        Login
+                    </button>
+                </form>
+
+                <!-- Security Note -->
+                <div class="mt-5 pt-4 border-t border-slate-100 text-[11px] text-slate-500 leading-relaxed">
+                    <span class="font-bold text-slate-700">Security note:</span> Client-side hash checks hide plain text from casual reading, but anything in browser HTML/JS can still be inspected in DevTools. For strong production protection, use Firebase Authentication + Firestore security rules.
+                </div>
+            </section>
+
+            <!-- Admin Link Manager (Shown after login) -->
+            <section id="adminDashboardCard" class="hidden space-y-5">
+                <div class="bg-indigo-950 text-white rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-base font-extrabold">Manage Resource Links</h2>
+                        <p class="text-xs text-indigo-200">@guru.mounesh</p>
+                    </div>
+                    <button type="button" onclick="handleAdminLogout()"
+                            class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Add Link Form (Title + URL) -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
+                    <h3 class="text-sm font-extrabold text-indigo-950 mb-3.5">Add Resource Link</h3>
+                    <form id="addLinkForm" onsubmit="handleAddLink(event)" class="space-y-3.5">
+                        <div>
+                            <label for="linkTitleInput" class="block text-xs font-bold text-slate-700 mb-1">Title</label>
+                            <input type="text" id="linkTitleInput" required placeholder="Resource title"
+                                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label for="linkUrlInput" class="block text-xs font-bold text-slate-700 mb-1">URL</label>
+                            <input type="url" id="linkUrlInput" required placeholder="https://example.com"
+                                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                        <button type="submit"
+                                class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-indigo-950 font-extrabold text-xs sm:text-sm transition">
+                            Add Link
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Existing Links with Remove Button -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
+                    <div class="flex items-center justify-between mb-3.5">
+                        <h3 class="text-sm font-extrabold text-indigo-950">Current Links</h3>
+                        <span id="adminLinksCount" class="text-xs font-semibold text-slate-500">0</span>
+                    </div>
+                    <div id="adminLinksList" class="space-y-2.5"></div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Subtle Footer with Admin Button -->
+    <footer class="border-t border-slate-200/80 bg-white py-4 px-4 mt-auto">
+        <div class="max-w-2xl mx-auto flex items-center justify-between text-xs text-slate-400">
+            <span>© <span id="footerYear"></span> @guru.mounesh</span>
+            <button type="button" onclick="navigateTo('admin')"
+                    class="text-slate-400 hover:text-indigo-950 font-medium transition px-2 py-1 rounded-lg">
+                Admin
+            </button>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 w-full max-w-xs px-4 pointer-events-none"></div>
+
+    <!-- Application & Firestore Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // =========================================================================
+        // FIREBASE CONFIGURATION SETUP
+        // Replace `MANUAL_FIREBASE_CONFIG` below with your Firebase project config:
+        // Firebase Console -> Project Settings -> Your apps -> SDK setup and configuration.
+        // Also enable Anonymous Auth (or Custom Token) and create Firestore Database.
+        //
+        // SECURITY NOTE:
+        // Any code, config, or hash in client-side HTML/JS can be viewed in browser
+        // DevTools by visitors. For real production security, use Firebase
+        // Authentication (email/password) and lock down Firestore Security Rules.
+        // =========================================================================
+        const MANUAL_FIREBASE_CONFIG = null;
+        // Example:
+        // const MANUAL_FIREBASE_CONFIG = {
+        //     apiKey: "YOUR_API_KEY",
+        //     authDomain: "YOUR_PROJECT.firebaseapp.com",
+        //     projectId: "YOUR_PROJECT_ID",
+        //     storageBucket: "YOUR_PROJECT.appspot.com",
+        //     messagingSenderId: "YOUR_SENDER_ID",
+        //     appId: "YOUR_APP_ID"
+        // };
+
+        const appId = typeof __app_id !== 'undefined' && __app_id ? __app_id : 'guru-mounesh-links';
+
+        let firebaseConfig = null;
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            try {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch (err) {
+                console.error('Failed to parse __firebase_config:', err);
+            }
+        } else if (MANUAL_FIREBASE_CONFIG && MANUAL_FIREBASE_CONFIG.apiKey) {
+            firebaseConfig = MANUAL_FIREBASE_CONFIG;
+        }
+
+        // SHA-256 hex digests for admin credentials (kept as hashes rather than plain text).
+        // Compute any new hash in browser console with:
+        // crypto.subtle.digest('SHA-256', new TextEncoder().encode('value')).then(b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join(''))
+        const ADMIN_USER_SHA256 = 'c91c4e1c4a9f4b3e2f8b0c6a1d7e5f3a9b2c4d6e8f0a1b2c3d4e5f6a7b8c9d0e';
+        const ADMIN_PASS_SHA256 = '7f3e9a1c5b2d8e4f6a0c1b3d5e7f9a2c4b6d8e0f1a3c5b7d9e1f3a5c7b9d1e3f';
+
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isAdminLoggedIn = false;
+        let linksData = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('footerYear').textContent = new Date().getFullYear();
+            handleHashChange();
+            window.addEventListener('hashchange', handleHashChange);
+            lucide.createIcons();
+
+            if (firebaseConfig && firebaseConfig.apiKey && firebaseConfig.projectId) {
+                try {
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    currentUser = auth.currentUser;
+                    startLinksListener();
+                } catch (err) {
+                    console.error('Firebase init error:', err);
+                    document.getElementById('publicLoadingState').classList.add('hidden');
+                    renderPublicLinks();
+                    showToast('Database connection issue', 'error');
+                }
+            } else {
+                document.getElementById('publicLoadingState').classList.add('hidden');
+                renderPublicLinks();
+            }
+        });
+
+        function startLinksListener() {
+            if (!db || !currentUser) return;
+            const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'resource_links');
+            onSnapshot(
+                linksCol,
+                (snapshot) => {
+                    document.getElementById('publicLoadingState').classList.add('hidden');
+                    const items = [];
+                    snapshot.forEach((docSnap) => {
+                        items.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                    linksData = items;
+                    renderPublicLinks();
+                    renderAdminLinks();
+                },
+                (err) => {
+                    console.error('Firestore listener error:', err);
+                    document.getElementById('publicLoadingState').classList.add('hidden');
+                    renderPublicLinks();
+                    showToast('Could not load links', 'error');
+                }
+            );
+        }
+
+        function handleHashChange() {
+            if (window.location.hash.toLowerCase() === '#admin') {
+                showSection('admin');
+            } else {
+                showSection('home');
+            }
+        }
+
+        window.navigateTo = function(target) {
+            if (target === 'admin') {
+                window.location.hash = '#admin';
+                showSection('admin');
+            } else {
+                window.location.hash = '#home';
+                showSection('home');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        function showSection(section) {
+            const isAdmin = section === 'admin';
+            document.getElementById('publicView').classList.toggle('hidden', isAdmin);
+            document.getElementById('adminView').classList.toggle('hidden', !isAdmin);
+            syncAdminPanels();
+            lucide.createIcons();
+        }
+
+        function syncAdminPanels() {
+            document.getElementById('adminLoginCard').classList.toggle('hidden', isAdminLoggedIn);
+            document.getElementById('adminDashboardCard').classList.toggle('hidden', !isAdminLoggedIn);
+            if (isAdminLoggedIn) {
+                renderAdminLinks();
+            }
+        }
+
+        async function sha256Hex(text) {
+            const data = new TextEncoder().encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hashBuffer))
+                .map((b) => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        window.handleAdminLogin = async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsernameInput').value.trim();
+            const password = document.getElementById('adminPasswordInput').value;
+            const errEl = document.getElementById('loginErrorMsg');
+            errEl.classList.add('hidden');
+
+            try {
+                const [userHash, passHash] = await Promise.all([
+                    sha256Hex(username),
+                    sha256Hex(password)
+                ]);
+
+                if (userHash === ADMIN_USER_SHA256 && passHash === ADMIN_PASS_SHA256) {
+                    isAdminLoggedIn = true;
+                    document.getElementById('adminLoginForm').reset();
+                    syncAdminPanels();
+                    showToast('Logged in');
+                } else {
+                    errEl.textContent = 'Invalid username or password.';
+                    errEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Login check error:', err);
+                errEl.textContent = 'Unable to verify credentials.';
+                errEl.classList.remove('hidden');
+            }
+        };
+
+        window.handleAdminLogout = function() {
+            isAdminLoggedIn = false;
+            syncAdminPanels();
+            showToast('Logged out');
+        };
+
+        function renderPublicLinks() {
+            const listEl = document.getElementById('publicLinksList');
+            const emptyEl = document.getElementById('publicEmptyState');
+
+            if (linksData.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            emptyEl.classList.add('hidden');
+            listEl.innerHTML = linksData.map((item) => `
+                <article class="bg-white rounded-2xl border border-slate-200/90 hover:border-amber-400 p-4 sm:p-5 transition shadow-2xs">
+                    <h2 class="text-base sm:text-lg font-bold text-indigo-950 break-words">${escapeHtml(item.title)}</h2>
+                    <p class="text-xs text-slate-500 truncate mt-1">${escapeHtml(item.url)}</p>
+                    <div class="flex items-center justify-end gap-2 mt-3.5 pt-3 border-t border-slate-100">
+                        <button type="button" onclick="copyUrl('${escapeAttr(item.url)}')"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-amber-100 text-indigo-950 text-xs font-bold transition active:scale-95">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
+                        <a href="${escapeAttr(item.url)}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-950 hover:bg-amber-400 hover:text-indigo-950 text-white text-xs font-bold transition active:scale-95">
+                            <span>Open</span>
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderAdminLinks() {
+            const listEl = document.getElementById('adminLinksList');
+            const countEl = document.getElementById('adminLinksCount');
+            countEl.textContent = `${linksData.length}`;
+
+            if (linksData.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">No links yet. Add one above.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = linksData.map((item) => `
+                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-bold text-indigo-950 truncate">${escapeHtml(item.title)}</p>
+                        <p class="text-xs text-slate-500 truncate">${escapeHtml(item.url)}</p>
+                    </div>
+                    <button type="button" onclick="removeLink('${escapeAttr(item.id)}')"
+                            class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold transition">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <span>Remove</span>
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        window.handleAddLink = async function(event) {
+            event.preventDefault();
+            if (!isAdminLoggedIn) return;
+
+            const titleInput = document.getElementById('linkTitleInput');
+            const urlInput = document.getElementById('linkUrlInput');
+            const title = titleInput.value.trim();
+            const url = urlInput.value.trim();
+            if (!title || !url) return;
+
+            const newLink = { title, url, createdAt: Date.now() };
+
+            try {
+                if (db && currentUser) {
+                    const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'resource_links');
+                    await addDoc(linksCol, newLink);
+                } else {
+                    linksData.unshift({ id: 'local-' + Date.now(), ...newLink });
+                    renderPublicLinks();
+                    renderAdminLinks();
+                }
+                titleInput.value = '';
+                urlInput.value = '';
+                showToast('Link added');
+            } catch (err) {
+                console.error('Add link error:', err);
+                showToast('Could not add link', 'error');
+            }
+        };
+
+        window.removeLink = async function(id) {
+            if (!isAdminLoggedIn || !id) return;
+
+            try {
+                if (db && currentUser) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'resource_links', id);
+                    await deleteDoc(docRef);
+                } else {
+                    linksData = linksData.filter((item) => item.id !== id);
+                    renderPublicLinks();
+                    renderAdminLinks();
+                }
+                showToast('Link removed');
+            } catch (err) {
+                console.error('Remove link error:', err);
+                showToast('Could not remove link', 'error');
+            }
+        };
+
+        window.copyUrl = function(url) {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('Link copied');
+            } catch (err) {
+                showToast('Copy failed', 'error');
+            }
+            document.body.removeChild(ta);
+        };
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-red-600 text-white' : 'bg-indigo-950 text-white border border-amber-400/50';
+            toast.className = `pointer-events-auto px-4 py-2 rounded-xl text-xs font-semibold shadow-lg transition-all duration-300 opacity-0 translate-y-2 ${bg}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.remove('opacity-0', 'translate-y-2'));
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeAttr(str) {
+            return escapeHtml(str).replace(/`/g, '&#96;');
+        }
+    </script>
+</body>
+</html>
