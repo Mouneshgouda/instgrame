@@ -1,18 +1,9 @@
-product based project with source code 
-https://data-flair.training/blogs/machine-learning-project-ideas/
+# Instagram Resources & Job Application Links
 
-infosys system Enginering Apply Link 2027
-https://surveys.infosysapps.com/r/a/SEcampusregistration2027batch?fbclid=PARlRTSAV3QcJleHRuA2FlbQIxMABwZG9mAmZkaWQWUTHhALsuoS_R8DYLBxHnsqW4ipWkynNydGMGYXBwX2lkDzEyNDAyNDU3NDI4NzQxNAABp-BwTMaYFzFrk38WHNUPStRq-UtbSu90-tr7y8dkBBNeYp9dzNNSGjxbqAC5_aem_8B0ybEtQK4iTZdJDbQyZxw
+A collection of useful resources shared through my Instagram posts.
 
-
-TCS NQT Resuorce
-
-https://l.instagram.com/?u=https%3A%2F%2Ftakeuforward.org%2Fblogs%2Finterview-preparation%2Ftcs-nqt-sheet%3Ffbclid%3DPARlRTSAV3QglleHRuA2FlbQIxMABwZG9mAmZkaWQWUTFzcUjutjepNPZku5cNSecQLIG7L3NydGMGYXBwX2lkDzEyNDAyNDU3NDI4NzQxNAABp9nFPcMweRtzCK2kj4TATGMJkM20fvxGb406ELXNezn6yRA_TwsceC5eiZaQ_aem_ZmFrZWR1bW15MTZieXRlcw&e=AUDaxCa-ZetQVLaYHeAjxBz0F4DS3N8mEVpBY3QfWI9vRttm3_1dBq7_TBT3iX8fv6V7i_vQNIz66SiLyJTjPCFFP4m_N5Gx4KKlZ4tZGWv4f52PQi5zYEhSaTTzdk23pPtQ-7T-9k9k
-
-Deloitte  resueme and tricks
-
-https://l.instagram.com/?u=https%3A%2F%2Fdocs.google.com%2Fdocument%2Fd%2F17YIYI5FaWB7hTqxHMpJcnrCQHeNC-hAWi2jGP7k-df0%2Fedit%3Fusp%3Dsharing&e=AUBmr5sPipavaCQK0sVb5KN5Pvu3mAmhPfZBSHN3Verkaa-NHgam9HKie6f1frNu98jqxlKMJJublRWgOmToSzB97tSU_pNo0kKJn6aXQv90yRU7PM74S1jfL-S0aY323WIAflgMJnqz
-
-
-infosys Study Matrials
-https://docs.google.com/document/d/1Hfv_EEbo6nX6lh67QQqrOwukBLbqFpGSiX4js0VMsEA/edit?usp=sharing
+- [Machine Learning Projects with Source Code](https://data-flair.training/blogs/machine-learning-project-ideas/)
+- [Infosys System Engineer – 2027 Application](https://surveys.infosysapps.com/r/a/SEcampusregistration2027batch)
+- [TCS NQT Preparation Resources](https://takeuforward.org/blogs/interview-preparation/tcs-nqt-sheet)
+- [Deloitte Resume & Preparation Tips](https://docs.google.com/document/d/17YIYI5FaWB7hTqxHMpJcnrCQHeNC-hAWi2jGP7k-df0/edit?usp=sharing)
+- [Infosys Study Materials](https://docs.google.com/document/d/1Hfv_EEbo6nX6lh67QQqrOwukBLbqFpGSiX4js0VMsEA/edit?usp=sharing)
